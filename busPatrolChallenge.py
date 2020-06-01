@@ -1,3 +1,9 @@
+#Created by Rocco Summa
+#6/1/2020
+#rasumma@me.com
+#Intern Challenge for buspatrol which seeks to utilize a sqlite database and flask in order to display
+#users and job titles/descriptions in json within a web server route
+
 from flask import Flask, jsonify, request, json
 import sqlite3 as sqlite
 import sys
