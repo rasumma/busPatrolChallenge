@@ -2,12 +2,10 @@ from flask import Flask, jsonify, request, json
 import sqlite3 as sqlite
 import sys
 
-
 app = Flask(__name__)
 
 #if no name is specified in paramaters, list all valid names for the user to choose from by creating a cursor
 #to fetch all of the the data from the users table and appending them all to a string to be jsonify'd
-
 @app.route('/users', methods=['GET'])
 def listNames():
 	jsonText = ""
@@ -21,14 +19,12 @@ def listNames():
 			jsonText += row[1] + "  " 
 
 	return jsonify(users=jsonText) 
-
 	
 #if a name is specified, then we use whatever name they give us and check the users table for the given name.
 #if it is a valid name then it will set the jobID variable to whatever jobID that user has in the table,
 #otherwise the userRows object will be set as None, so I handle that error by returning a fairly generic error statement
 #with information on how to search for valid names. We then use the jobID to search through the jobs table and we get the title
-#and description from the table and jsonify them.
-		
+#and description from the table and jsonify them.	
 @app.route('/users/<string:name>', methods=['GET'])
 def listUserDescription(name):
 	jsonText = ""
