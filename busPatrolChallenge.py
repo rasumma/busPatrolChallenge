@@ -7,10 +7,11 @@ import sys
 
 app = Flask(__name__)
 
+#attempt connection to busPatrol database
 
-#if no name is specified in paramaters, list all names for the user to choose by 
-#connecting to the sqlite database and converting the names into json strings
 
+
+#if no name is specified in paramaters, list all names for the user to choose.
 @app.route('/users', methods=['GET'])
 def listNames():
 	jsonText = ""
@@ -22,14 +23,11 @@ def listNames():
 		rows = cursor.fetchall()
 
 		for row in rows:
-			jsonText += json.dumps(row[1])
+			jsonText += row[1] + "  " 
 
-	return jsonify(jsonText) 
+	return jsonify(users=jsonText) 
 		
 
-#if a name extension is specified, we check to see if the name is in the database and then get the jobID from the users database
-#we then create a new connection to the jobs database and, using the jobID, we get the title and description of the job and then
-#convert those into json strings
 
 @app.route('/users/<string:name>', methods=['GET'])
 def listUserDescription(name):
@@ -43,8 +41,11 @@ def listUserDescription(name):
 		usersCursor = usersConnection.cursor()
 		usersCursor.execute("SELECT name, job  FROM users WHERE name=:name", {"name" : name})
 		usersRows = usersCursor.fetchone()
-
-		jobID = usersRows[1]
+		if usersRows is None:
+			jsonText = "Not a valid user. Please check /users for valid users."
+			return jsonify(jsonText)
+		else:
+			jobID = usersRows[1]
 
 	with jobsConnection:
 
@@ -52,10 +53,7 @@ def listUserDescription(name):
 		jobsCursor.execute("SELECT id, title, description FROM jobs WHERE id=:id", {"id" : jobID})
 		jobsRows = jobsCursor.fetchone()
 
-		jsonText += "{ job_title: " + json.dumps(jobsRows[1])
-		jsonText += "   job_description: " + json.dumps(jobsRows[2]) + "}"
-
+	
+	return jsonify(job_title=jobsRows[1],
+			job_description=jobsRows[2])
 		
-
-
-	return jsonify(jsonText)
