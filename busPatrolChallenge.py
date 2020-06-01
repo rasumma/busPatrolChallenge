@@ -54,3 +54,4 @@ def listUserDescription(name):
 
 	return jsonify(job_title=jobsRows[1],
 			job_description=jobsRows[2])
+
