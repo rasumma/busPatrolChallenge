@@ -14,8 +14,9 @@ app = Flask(__name__)
 #to fetch all of the the data from the users table and appending them all to a string to be jsonify'd
 @app.route('/users', methods=['GET'])
 def listNames():
-        jsonText = ""
+    jsonText = ""
     connection = sqlite.connect('buspatrol.db')
+
     with connection:	
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM users")
